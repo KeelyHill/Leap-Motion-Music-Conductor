@@ -5,9 +5,9 @@ const LEFT_HAND = 'left';
 const RIGHT_HAND = 'right';
 
 scales = {
-    "C": ['C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4'],
-    "Bb": ['Bb2' ,'C3','Db3', 'Eb3', 'F3', 'Gb3', 'Ab3', 'Bb3', 'C4', 'Db4'],
-    "BlackNotes": ['C#3', 'D#3', 'F#3', 'G#3', 'A#3', 'C#4', 'D#4', 'F#4'],
+    'C': ['C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4'],
+    'Bb': ['F3', 'G3', 'A3', 'Bb3' ,'C4','D4', 'Eb4', 'F4', 'G4', 'A4', 'Bb4', 'C45'],
+    'BlackNotes': ['C#3', 'D#3', 'F#3', 'G#3', 'A#3', 'C#4', 'D#4', 'F#4'],
 }
 
 currentNotes = scales["C"];
