@@ -14,6 +14,30 @@ scales = {
 
 currentNotes = scales["C"];
 
+/* Canvas viewer code */
+var canvas = document.getElementById('viewer');
+var ctx = canvas.getContext('2d');
+ctx.strokeStyle = "#0033FF";
+
+drawCircleForPosition = function(x, y) {
+    var radius = 15;
+    var halfRadius = radius / 2
+
+    ctx.beginPath();
+    ctx.arc(x - halfRadius, y - halfRadius, radius, 0, 2*Math.PI);
+    ctx.lineWidth=10;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0,canvas.height/2);
+    ctx.lineTo(canvas.width,canvas.height/2);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+}
+
+var clearViewer = function() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
 
 function Instrument(name, notes) {
     this.instrument = soundfont.instrument(name);
@@ -24,8 +48,7 @@ function Instrument(name, notes) {
     var righthandLastIndex = -1;
 
     var lastLefthandNote = null;
-
-    var lastIndex = -1;
+    var lastRighthandNote = null;
 
     this.playIndexWithHand = function(index, hand) {
 
@@ -41,7 +64,19 @@ function Instrument(name, notes) {
 
         if (hand == RIGHT_HAND && righthandLastIndex != index) {
             righthandLastIndex = index;
+
+            if (lastRighthandNote)
+                lastRighthandNote.stop();
+
             this.instrument.play(this.notes[index], 0, -1);
+        }
+    }
+
+    this.playNoteAgainForHand = function (hand) {
+        if (hand == LEFT_HAND) {
+            lastLefthandNote = this.instrument.play(this.notes[this.lefthandLastIndex], 0, -1);
+        } else if (hand == RIGHT_HAND) {
+            lastRighthandNote = this.instrument.play(this.notes[this.righthandLastIndex], 0, -1);
         }
 
     }
@@ -52,11 +87,13 @@ var instrument_1 = new Instrument('acoustic_grand_piano', currentNotes);
 var instrument_2 = new Instrument('acoustic_guitar_steel', currentNotes);
 
 
+// hack because `soundfont.onready()` is not a function
+loadingInst = soundfont.instrument('acoustic_grand_piano');
+
 
 /* When user selects different instrument */
 var inst_1_select = document.getElementById("inst-1");
 inst_1_select.onchange = function(){
-    console.log(inst_1_select.options[inst_1_select.selectedIndex].value);
     instrument_1.instrument = soundfont.instrument(inst_1_select.options[inst_1_select.selectedIndex].value);
 };
 
@@ -70,9 +107,15 @@ var scaleSelect = document.getElementById("scale");
 scaleSelect.onchange = function(){
     var key = scaleSelect.options[scaleSelect.selectedIndex].value
     newScale = scales[key];
+
     currentNotes = newScale;
     instrument_1.notes = newScale;
     instrument_2.notes = newScale;
+
+    /* Play a sample */
+    instrument_1.instrument.play(newScale[0], 0);
+    setTimeout(function(){ instrument_1.instrument.play(newScale[1], 0); }, 400);
+    setTimeout(function(){ instrument_1.instrument.play(newScale[2], 0); }, 800);
 };
 
 
@@ -87,20 +130,13 @@ autoplayCheckbox.onclick = function(){
 };
 
 
-// hack because `soundfont.onready()` is not a function
-loadingInst = soundfont.instrument('acoustic_grand_piano');
-
-
 loadingInst.onready(function() {
 
     var previousFrame = null;
 
-    var controllerOptions = {
-        enableGestures: true
-    };
+    Leap.loop({enableGestures: true}, function(frame) {
 
-
-    Leap.loop(controllerOptions, function(frame) {
+        clearViewer();
 
         if (frame.hands.length > 0) {
             for (var i = 0; i < frame.hands.length; i++) {
@@ -118,6 +154,9 @@ loadingInst.onready(function() {
                 x = hand.indexFinger.dipPosition[0];
                 y = hand.indexFinger.dipPosition[1];
 
+
+                drawCircleForPosition(x + (700/2), (y - 550) * -1);
+
                 // based on finger location, get index to grab from the currentNotes
                 index = Math.floor((x + (frame.interactionBox.width / 2)) / noteRange)
 
@@ -132,11 +171,19 @@ loadingInst.onready(function() {
                         instrument = instrument_1;
                     }
 
-                    var hand = hand.type
-
+                    // play note if okay index
                     if (Math.abs(index) < currentNotes.length) {
-                        instrument.playIndexWithHand(index, hand);
+                        instrument.playIndexWithHand(index, hand.type);
                     }
+
+                    /* If a gesture occurs do this */
+                    frame.gestures.forEach(function(gesture){
+                        // if keytap, play same note again
+                        if (gesture.type == "keyTap") {
+                            instrument.playNoteAgainForHand(hand.type);
+                        }
+                    });
+
                 } else {
                     if (autoPlayLastIndex != index) {
                         if (autoPlayNoteIndex >= autoPlayNotes.length)
