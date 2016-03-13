@@ -2,4 +2,6 @@
 
 Utilizes a [Leap Motion controller](https://www.leapmotion.com) to control instruments.
 
-Note: does not play sound in Safari.
+Feel free to contribute!
+
+_Note: does not play sound in Safari._
