@@ -13,11 +13,6 @@ scales = {
 currentNotes = scales["C"];
 
 
-// notes = ['C#3', 'D#3', 'F#3', 'G#3', 'A#3', 'C#3', 'D#3', 'F#3'];
-
-// notes = ['E2' ,'G2','C3', 'E3', 'G3', 'C4', 'E4', 'G4', 'C5', 'E5'];
-
-
 function Instrument(name, notes) {
     this.instrument = soundfont.instrument(name);
 
