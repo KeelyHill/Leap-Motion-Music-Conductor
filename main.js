@@ -1,3 +1,11 @@
+/**
+    main.js
+
+    All the JS for the Leap Motion Music Conductor
+
+    Controls the music and Leap input processing.
+*/
+
 var ctx = new AudioContext();
 var soundfont = new Soundfont(ctx);
 
