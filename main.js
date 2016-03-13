@@ -18,16 +18,23 @@ function Instrument(name, notes) {
 
     this.notes = notes;
 
-    lefthandLastIndex = -1;
-    righthandLastIndex = -1;
+    var lefthandLastIndex = -1;
+    var righthandLastIndex = -1;
 
-    lastIndex = -1;
+    var lastLefthandNote = null;
+
+    var lastIndex = -1;
 
     this.playIndexWithHand = function(index, hand) {
 
         if (hand == LEFT_HAND && lefthandLastIndex != index) {
             lefthandLastIndex = index;
-            this.instrument.play(this.notes[index], 0, -1);
+
+            if (lastLefthandNote)
+                lastLefthandNote.stop(2);
+
+            lastLefthandNote = this.instrument.play(this.notes[index], 0, -1);
+
         }
 
         if (hand == RIGHT_HAND && righthandLastIndex != index) {
@@ -67,6 +74,17 @@ scaleSelect.onchange = function(){
 };
 
 
+var doAutoPlay = false;
+var autoPlayLastIndex = -1;
+var autoPlayNoteIndex = 0;
+var autoPlayNotes = ['E3', 'E3', 'E3', 'C3', 'E3', 'G3', 'G2', 'C3', 'G3', 'E3', 'A3', 'B3', 'Bb3', 'A3', 'G3', 'E3', 'G3', 'A3', 'F3', 'G3', 'E3', 'C3', 'D3', 'B3', 'C3', 'C3', 'C3'];
+
+var autoplayCheckbox = document.getElementById("autoplay-checkbox");
+autoplayCheckbox.onclick = function(){
+    doAutoPlay = autoplayCheckbox.checked;
+};
+
+
 // hack because `soundfont.onready()` is not a function
 loadingInst = soundfont.instrument('acoustic_grand_piano');
 
@@ -86,9 +104,14 @@ loadingInst.onready(function() {
             for (var i = 0; i < frame.hands.length; i++) {
                 var hand = frame.hands[i];
 
-                // get a 'box' (1-d) where a note is played
-                noteRange = frame.interactionBox.width / currentNotes.length;
+                var numNotes = currentNotes.length;
 
+                if (doAutoPlay) {
+                    numNotes = 4;
+                }
+
+                // get a 'box' (1-d) where a note is played
+                noteRange = frame.interactionBox.width / numNotes;
 
                 x = hand.indexFinger.dipPosition[0];
                 y = hand.indexFinger.dipPosition[1];
@@ -96,18 +119,33 @@ loadingInst.onready(function() {
                 // based on finger location, get index to grab from the currentNotes
                 index = Math.floor((x + (frame.interactionBox.width / 2)) / noteRange)
 
-                // select instrument based on height
-                var instrument;
-                if (y < 200) {
-                    instrument = instrument_2;
+
+                if (!doAutoPlay) {
+
+                    // select instrument based on height
+                    var instrument;
+                    if (y < 200) {
+                        instrument = instrument_2;
+                    } else {
+                        instrument = instrument_1;
+                    }
+
+                    var hand = hand.type
+
+                    if (Math.abs(index) < currentNotes.length) {
+                        instrument.playIndexWithHand(index, hand);
+                    }
                 } else {
-                    instrument = instrument_1;
-                }
+                    if (autoPlayLastIndex != index) {
+                        if (autoPlayNoteIndex >= autoPlayNotes.length)
+                            autoPlayNoteIndex = 0;
 
-                var hand = hand.type
+                        autoPlayLastIndex = index;
 
-                if (Math.abs(index) < currentNotes.length) {
-                    instrument.playIndexWithHand(index, hand);
+                        instrument_1.instrument.play(autoPlayNotes[autoPlayNoteIndex], 0, -1);
+
+                        autoPlayNoteIndex++;
+                    }
                 }
             }
         }

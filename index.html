@@ -23,10 +23,11 @@
         <p>Utilizes a <a href="https://www.leapmotion.com">Leap Motion controller</a> to control instruments.</p>
 
         <br>
+        <br>
 
         <div>
 
-            <lable for="scale">Scale/Notes:</lable>
+            <label for="scale">Scale/Notes:</label>
             <select name="scale" id="scale">
                 <option value="C" selected="selected">C</option>
                 <option value="Bb">Bb</option>
@@ -36,18 +37,22 @@
             <br>
 
             <!-- These options are duplicates of each other other than defaults -->
-            <lable for="inst-1">Instrument 1 (Top):</lable>
+            <label for="inst-1">Instrument 1 (Top):</label>
             <select name="inst-1" id="inst-1">
                 <option value="acoustic_grand_piano" selected="selected">acoustic_grand_piano</option>
                 <option value="honkytonk_piano">honkytonk_piano</option>
                 <option value="acoustic_guitar_steel">acoustic_guitar_steel</option>
                 <option value="vibraphone">vibraphone</option>
                 <option value="string_ensemble_1">string_ensemble_1</option>
+
+
+                <option value="flute">flute</option>
+
             </select>
 
             <br>
 
-            <lable for="inst-2">Instrument 2 (Bottom):</lable>
+            <label for="inst-2">Instrument 2 (Bottom):</label>
             <select name="inst-2" id="inst-2">
                 <option value="acoustic_grand_piano">acoustic_grand_piano</option>
                 <option value="honkytonk_piano">honkytonk_piano</option>
@@ -58,6 +63,9 @@
 
         </div>
 
+
+        <label tile="work in progress, does not work great">Autoplay (w.i.p)</label>
+        <input type="checkbox" id="autoplay-checkbox">
 
 
         <script src="main.js"></script>
