@@ -1,7 +1,59 @@
+<!DOCTYPE html>
 <html>
+    <head>
+        <title>Leap Motion Music Conductor</title>
 
-    <script src="soundfont-player.min.js"></script>
-    <script src="http://js.leapmotion.com/leap-0.6.3.min.js"></script>
+        <script src="soundfont-player.min.js"></script>
+        <script src="http://js.leapmotion.com/leap-0.6.3.min.js"></script>
 
-    <script src="main.js"></script>
+
+        <meta name="description" content="Play music from a Leap Motion controller.">
+        <meta name="author" content="">
+        <meta name="keywords" content="Leap Motion, music">
+    </head>
+
+
+    <body>
+        <!--Fork me on github ribbon-->
+        <a href="https://github.com/KeelyHill/Leap-Motion-Music-Conductor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+
+        <div>
+
+            <lable for="scale">Scale/Notes</lable>
+            <select name="scale" id="scale">
+                <option value="C" selected="selected">C</option>
+                <option value="Bb">Bb</option>
+                <option value="BlackNotes">Black Notes</option>
+            </select>
+
+            <br>
+
+            <!-- These options are duplicates of each other other than defaults -->
+            <lable for="inst-1">Instrument 1 (Top):</lable>
+            <select name="inst-1" id="inst-1">
+                <option value="acoustic_grand_piano" selected="selected">acoustic_grand_piano</option>
+                <option value="honkytonk_piano">honkytonk_piano</option>
+                <option value="acoustic_guitar_steel">acoustic_guitar_steel</option>
+                <option value="vibraphone">vibraphone</option>
+                <option value="string_ensemble_1">string_ensemble_1</option>
+            </select>
+
+            <br>
+
+            <lable for="inst-2">Instrument 2 (Bottom):</lable>
+            <select name="inst-2" id="inst-2">
+                <option value="acoustic_grand_piano">acoustic_grand_piano</option>
+                <option value="honkytonk_piano">honkytonk_piano</option>
+                <option value="acoustic_guitar_steel" selected="selected">acoustic_guitar_steel</option>
+                <option value="vibraphone">vibraphone</option>
+                <option value="string_ensemble_1">string_ensemble_1</option>
+            </select>
+
+        </div>
+
+
+
+        <script src="main.js"></script>
+    </body>
 </html>
