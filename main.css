@@ -1,7 +1,8 @@
 body{
+    font-family: Tahoma, Geneva, sans-serif;
     margin:40px auto;
     max-width:650px;
-    line-height:1.6;
+    line-height:1.65;
     font-size:18px;
     color:#444;
     padding:0 10px;
